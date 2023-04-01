@@ -7,18 +7,6 @@
 
 import Suite
 
-public struct AddGroupToDayWrapper {
-	let action: (GroupRecord, Date.TimeRange, DayScheduleDocument) -> Void
-	
-	func callAsFunction(group: GroupRecord, time: Date.TimeRange, day: DayScheduleDocument) {
-		action(group, time, day)
-	}
-}
-
-struct AddGroupToDayEnvironmentKey: EnvironmentKey {
-	static var defaultValue = AddGroupToDayWrapper { _, _, _ in }
-}
-
 struct MinuteHeightEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 1.0
 }
@@ -59,11 +47,6 @@ extension EnvironmentValues {
 	var dropHandler: DropHandler {
 		get { self[DropHandlerEnvironmentKey.self] }
 		set { self[DropHandlerEnvironmentKey.self] = newValue }
-	}
-
-	public var addGroupToDay: AddGroupToDayWrapper {
-		get { self[AddGroupToDayEnvironmentKey.self] }
-		set { self[AddGroupToDayEnvironmentKey.self] = newValue }
 	}
 
 	public var minuteHeight: CGFloat {

@@ -59,8 +59,8 @@ public struct ScheduleContainer<DayInfo: ScheduleViewDayInfo, EventView: View>: 
 	}
 }
 
-extension ScheduleContainer where EventView == EventBubble<DayInfo> {
-	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18) {
+public extension ScheduleContainer where EventView == EventBubble<DayInfo> {
+	public init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18) {
 		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour) { day, event, conflicted in
 			EventBubble(eventInfo: event, day: day, isConflicted: conflicted)
 		}

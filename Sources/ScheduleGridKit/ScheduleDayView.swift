@@ -68,7 +68,7 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 					.onAppear { frame = geo.frame(in: .global) }
 			}
 		}
-		.makeDropTarget(types: [GroupRecord.dragType, DraggedEventInfo.dragType], hover: { type, dropped, point in
+		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
 			guard let point, let minute = minutesFromMidnight(for: point.y) else {
 				clearDrag()
 				return false
