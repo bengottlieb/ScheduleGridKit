@@ -28,6 +28,7 @@ public protocol ScheduleViewDayInfo: Identifiable, ObservableObject, Equatable {
 	func conflicts(for proposedEvent: EventInfo, on day: Self) -> [EventInfo]
 	func remove(event: EventInfo)
 	func proposedEvent(from info: DroppableScheduleItem, at interval: DateInterval) -> EventInfo?
+	func movedEvent(from event: EventInfo, to interval: DateInterval) -> EventInfo?
 }
 
 extension Array where Element: ScheduleViewDayInfo {

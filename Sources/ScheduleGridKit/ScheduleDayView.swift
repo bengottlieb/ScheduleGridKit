@@ -84,6 +84,12 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 				return false
 			}
 			
+			if let info = dropped as? DraggedEventInfo, let current = info.eventInfo as? DayInfo.EventInfo, let proposed = day.movedEvent(from: current, to: newInterval)  {
+				proposedDropItem = proposed
+				proposedDropDay = day
+				return false
+			}
+			
 			clearDrag()
 			return false
 		}) { type, dropped, point in
