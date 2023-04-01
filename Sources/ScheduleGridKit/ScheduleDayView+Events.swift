@@ -27,7 +27,7 @@ extension ScheduleDayView {
 		builder(day, event, isConflicted)
 			.frame(height: height(forMinutes: Int(event.duration / .minute)))
 			.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
-			.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event))
+			.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
 			.contextMenu {
 				Button("Edit") { }
 				Button("Delete", role: .destructive) { delete(event: event) }
