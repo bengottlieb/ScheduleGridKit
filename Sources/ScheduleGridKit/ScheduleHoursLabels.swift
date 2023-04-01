@@ -14,7 +14,7 @@ public struct ScheduleHoursLabels: ScheduleView {
 	@Environment(\.hourLabelHeight) var hourLabelHeight
 	@Environment(\.roundToNearestMinute) var roundToNearestMinute
 
-	@State private var frame: CGRect?
+	@State var frame: CGRect?
 	
 	public var body: some View {
 		Color.clear

@@ -86,6 +86,8 @@ protocol ScheduleView: View {
 	var startHour: Int { get }
 	var endHour: Int { get }
 	var hourLabelHeight: CGFloat { get }
+	var frame: CGRect? { get set }
+	var roundToNearestMinute: TimeInterval { get }
 }
 
 extension ScheduleView {
@@ -112,6 +114,11 @@ extension ScheduleView {
 		EdgeInsets(top: hourLabelHeight / 2, leading: 0, bottom: hourLabelHeight / 2, trailing: 0)
 	}
 	
+	func minutesFromMidnight(for y: CGFloat) -> Int? {
+		guard let frame, let minute = minuteOffset(for: y, in: frame) else { return nil }
+		
+		return Int(round(minute / roundToNearestMinute) * roundToNearestMinute)
+	}
 }
 
 extension View {

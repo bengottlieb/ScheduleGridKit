@@ -5,17 +5,16 @@
 //  Created by Ben Gottlieb on 3/13/23.
 //
 
-import SwiftUI
-import FireSpotter
+import Suite
 
 public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: ScheduleView {
+	typealias EventViewBuilder = ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder
 	@ObservedObject var day: DayInfo
-	private var conflicts: [DayInfo.EventInfo]
+	var conflicts: [DayInfo.EventInfo]
 	@Binding var proposedDropItem: DayInfo.EventInfo?
 	@Binding var proposedDropDay: DayInfo?
-	let builder: ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder
+	let builder: EventViewBuilder
 
-	
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
 	@Environment(\.endHour) var endHour
@@ -23,11 +22,9 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 	@Environment(\.roundToNearestMinute) var roundToNearestMinute
 	@Environment(\.newEventDuration) var newEventDuration
 	@Environment(\.dropHandler) var dropHandler
+	@State var frame: CGRect?
 	
-	@State private var frame: CGRect?
-	@State private var dragStartMinute: Int?
-	
-	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], builder: @escaping ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder) {
+	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], builder: @escaping EventViewBuilder) {
 		self.day = day
 		_proposedDropItem = proposedDropItem
 		_proposedDropDay = proposedDropDay
@@ -35,24 +32,12 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 		self.builder = builder
 	}
 	
-	var events: [DayInfo.EventInfo] {
-		var events = day.events
-		if proposedDropDay == day, let event = proposedDropItem {
-			events.append(event)
-		}
-		return events
-	}
-	
 	public var body: some View {
 		ZStack(alignment: .top) {
 			Color.clear
 			
 			ForEach(events) { event in
-				let isConflicted = conflicts.contains(event)
-				builder(day, event, isConflicted)
-//				EventBubble(eventInfo: event, day: day, isConflicted: isConflicted)
-					.frame(height: height(forMinutes: Int(event.duration / .minute)))
-					.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
+				viewForEvent(event: event)
 			}
 			
 		}
@@ -62,18 +47,12 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 			ScheduleHoursView(showHours: false)
 				.padding(paddingDueToHourLabel)
 		}
-		.background {
-			GeometryReader { geo in
-				Color.clear
-					.onAppear { frame = geo.frame(in: .global) }
-			}
-		}
+		.reportGeometry(frame: $frame)
 		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
 			guard let point, let minute = minutesFromMidnight(for: point.y) else {
 				clearDrag()
 				return false
 			}
-			dragStartMinute = minute
 			
 			let targetDate = day.date.dateBySetting(time: Date.Time(timeInterval: TimeInterval(minute) * 60))
 			let newInterval = DateInterval(start: targetDate, duration: newEventDuration)
@@ -87,24 +66,22 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 			if let info = dropped as? DraggedEventInfo, let current = info.eventInfo as? DayInfo.EventInfo, let proposed = day.movedEvent(from: current, to: newInterval)  {
 				proposedDropItem = proposed
 				proposedDropDay = day
-				return false
+			} else {
+				clearDrag()
 			}
-			
-			clearDrag()
 			return false
 		}) { type, dropped, point in
 			proposedDropItem = nil
 			
-			guard let start = dragStartMinute else { return false }
-			dragStartMinute = nil
+			guard let start = minutesFromMidnight(for: point.y) else { return false }
 			let targetDate = day.date.dateBySetting(time: Date.Time(timeInterval: TimeInterval(start) * 60))
 			let newInterval = DateInterval(start: targetDate, duration: newEventDuration)
+			clearDrag()
 			
 			if let info = dropped as? DraggedEventInfo, let day = info.day as? DayInfo, let event = info.eventInfo as? DayInfo.EventInfo {
 				day.remove(event: event)
 				return dropHandler(event, nil, newInterval)
 			} else if let item = dropped as? DroppableScheduleItem {
-				
 				return dropHandler(nil, item, newInterval)
 			}
 			return false
@@ -112,18 +89,9 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 	}
 	
 	func clearDrag() {
-		dragStartMinute = nil
-		
 		if proposedDropDay == day {
 			proposedDropDay = nil
 			proposedDropItem = nil
 		}
-	}
-	
-	func minutesFromMidnight(for y: CGFloat) -> Int? {
-		guard let frame, let minute = minuteOffset(for: y, in: frame) else { return nil }
-		
-		
-		return Int(round(minute / roundToNearestMinute) * roundToNearestMinute)
 	}
 }

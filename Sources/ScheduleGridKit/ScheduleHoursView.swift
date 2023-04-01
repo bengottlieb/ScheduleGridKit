@@ -14,6 +14,8 @@ public struct ScheduleHoursView: ScheduleView {
 	@Environment(\.startHour) var startHour
 	@Environment(\.endHour) var endHour
 	@Environment(\.hourLabelHeight) var hourLabelHeight
+	@Environment(\.roundToNearestMinute) var roundToNearestMinute
+	@State var frame: CGRect?
 
 	public init(showHours: Bool = true) {
 		self.showHours = showHours
