@@ -54,8 +54,8 @@ public struct EventBubble<DayInfo: ScheduleViewDayInfo>: View {
 }
 
 
-struct DraggedEventInfo {
-	static let dragType = "DraggedEventInfo"
-	let day: any ScheduleViewDayInfo
-	let eventInfo: any ScheduleViewEventInfo
+public struct DraggedEventInfo {
+	public static let dragType = "DraggedEventInfo"
+	public let day: any ScheduleViewDayInfo
+	public let eventInfo: any ScheduleViewEventInfo
 }
