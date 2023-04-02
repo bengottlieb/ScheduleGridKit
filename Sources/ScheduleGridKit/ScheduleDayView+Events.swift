@@ -17,7 +17,7 @@ extension ScheduleDayView {
 	}
 
 	var events: [DayInfo.EventInfo] {
-		var events = day.events
+		var events = day.events.filter { !$0.isAllDay }
 		if proposedDropDay == day, let event = proposedDropItem { events.append(event) }
 		return events
 	}

@@ -14,6 +14,7 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var backgroundColor: Color { get }
 	var foregroundColor: Color { get }
 	var title: String { get }
+	var isAllDay: Bool { get }
 }
 
 public protocol DeletableScheduleGridEvent {

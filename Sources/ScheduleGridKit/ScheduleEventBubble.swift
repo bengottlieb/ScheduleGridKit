@@ -19,7 +19,9 @@ public struct ScheduleEventBubble<DayInfo: ScheduleGridDayInfo>: View {
 				.fill(eventInfo.backgroundColor)
 			
 			HStack {
-				Text(eventInfo.start.hourMinuteString)
+				if !eventInfo.isAllDay {
+					Text(eventInfo.start.hourMinuteString)
+				}
 				Spacer()
 				Text(eventInfo.title)
 				Spacer()

@@ -20,7 +20,8 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 	@Binding var proposedDropDay: DayInfo?
 	private var conflicts: [DayInfo.EventInfo]
 	@Environment(\.scheduleDaySpacing) var scheduleDaySpacing
-	
+	@Environment(\.minuteHeight) var minuteHeight
+
 	public enum WeekendStyle { case none, startSunday, startMonday }
 	
 	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo], headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
@@ -37,9 +38,16 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 			VStack(spacing: 0) {
 				HStack(spacing: 0) {
 					ForEach(days) { day in
-						headerBuilder(day)
-							.frame(width: (geo.size.width - hoursWidth) / CGFloat(days.count), alignment: .center)
-							.padding(.trailing, scheduleDaySpacing)
+						VStack {
+							headerBuilder(day)
+							
+							ForEach(day.events.filter { $0.isAllDay }) { event in
+								eventBuilder(day, event, false)
+									.frame(height: minuteHeight * 30.0)
+							}
+						}
+						.frame(width: (geo.size.width - hoursWidth) / CGFloat(days.count), alignment: .center)
+						.padding(.trailing, scheduleDaySpacing)
 					}
 				}
 				.padding(.leading, hoursWidth)
