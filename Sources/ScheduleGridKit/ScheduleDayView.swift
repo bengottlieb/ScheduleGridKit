@@ -7,13 +7,16 @@
 
 import Suite
 
-struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View>: ScheduleView {
-	typealias EventViewBuilder = ScheduleGridView<DayInfo, EventView>.ScheduleEventViewBuilder
+struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: ScheduleView {
+	typealias EventViewBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleEventViewBuilder
+	typealias DayHeaderBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleDayHeaderBuilder
+
 	@ObservedObject var day: DayInfo
 	var conflicts: [DayInfo.EventInfo]
 	@Binding var proposedDropItem: DayInfo.EventInfo?
 	@Binding var proposedDropDay: DayInfo?
-	let builder: EventViewBuilder
+	let eventBuilder: EventViewBuilder
+	let headerBuilder: DayHeaderBuilder
 
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
@@ -24,12 +27,13 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View>: ScheduleV
 	@Environment(\.dropHandler) var dropHandler
 	@State var frame: CGRect?
 	
-	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], builder: @escaping EventViewBuilder) {
+	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
 		self.day = day
 		_proposedDropItem = proposedDropItem
 		_proposedDropDay = proposedDropDay
 		self.conflicts = conflicts
-		self.builder = builder
+		self.headerBuilder = headerBuilder
+		self.eventBuilder = eventBuilder
 	}
 	
 	var body: some View {

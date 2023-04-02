@@ -15,6 +15,10 @@ struct StartHourEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 7
 }
 
+struct DaySpacingEnvironmentKey: EnvironmentKey {
+	static var defaultValue = 5.0
+}
+
 struct EndHourEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 18
 }
@@ -52,6 +56,11 @@ extension EnvironmentValues {
 	public var minuteHeight: CGFloat {
 		get { self[MinuteHeightEnvironmentKey.self] }
 		set { self[MinuteHeightEnvironmentKey.self] = newValue }
+	}
+
+	public var scheduleDaySpacing: CGFloat {
+		get { self[DaySpacingEnvironmentKey.self] }
+		set { self[DaySpacingEnvironmentKey.self] = newValue }
 	}
 
 	public var newEventDuration: TimeInterval {

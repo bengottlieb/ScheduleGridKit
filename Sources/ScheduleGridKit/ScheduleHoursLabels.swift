@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScheduleHoursLabels: ScheduleView {
+	let width: CGFloat
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
 	@Environment(\.endHour) var endHour
@@ -19,7 +20,7 @@ struct ScheduleHoursLabels: ScheduleView {
 	var body: some View {
 		Color.clear
 		.frame(height: totalDayHeight + hourLabelHeight)
-		.frame(maxWidth: 30, alignment: .leading)
+		.frame(maxWidth: width, alignment: .leading)
 		.background {
 			ScheduleHoursView(showHours: true)
 				.padding(paddingDueToHourLabel)

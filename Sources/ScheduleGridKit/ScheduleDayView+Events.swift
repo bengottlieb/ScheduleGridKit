@@ -24,7 +24,7 @@ extension ScheduleDayView {
 	
 	@ViewBuilder func viewForEvent(event: DayInfo.EventInfo) -> some View {
 		let isConflicted = conflicts.contains(event)
-		builder(day, event, isConflicted)
+		eventBuilder(day, event, isConflicted)
 			.frame(height: height(forMinutes: Int(event.duration / .minute)))
 			.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
 			.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
