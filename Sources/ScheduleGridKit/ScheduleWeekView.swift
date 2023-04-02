@@ -8,16 +8,16 @@
 import SwiftUI
 import Suite
 
-struct ScheduleWeekView<DayInfo: ScheduleViewDayInfo, EventView: View>: View {
+struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View>: View {
 	let days: [DayInfo]
-	let builder: ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder
+	let builder: ScheduleGridView<DayInfo, EventView>.ScheduleEventViewBuilder
 	@Binding var proposedDropItem: DayInfo.EventInfo?
 	@Binding var proposedDropDay: DayInfo?
 	private var conflicts: [DayInfo.EventInfo]
 	
 	public enum WeekendStyle { case none, startSunday, startMonday }
 	
-	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo], builder: @escaping ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder) {
+	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo], builder: @escaping ScheduleGridView<DayInfo, EventView>.ScheduleEventViewBuilder) {
 		self.days = days
 		self.conflicts = conflicts
 		_proposedDropItem = proposedDropItem

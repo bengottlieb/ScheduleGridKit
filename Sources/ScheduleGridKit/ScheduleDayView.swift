@@ -7,8 +7,8 @@
 
 import Suite
 
-public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: ScheduleView {
-	typealias EventViewBuilder = ScheduleContainer<DayInfo, EventView>.ScheduleEventViewBuilder
+struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View>: ScheduleView {
+	typealias EventViewBuilder = ScheduleGridView<DayInfo, EventView>.ScheduleEventViewBuilder
 	@ObservedObject var day: DayInfo
 	var conflicts: [DayInfo.EventInfo]
 	@Binding var proposedDropItem: DayInfo.EventInfo?
@@ -32,7 +32,7 @@ public struct ScheduleDayView<DayInfo: ScheduleViewDayInfo, EventView: View>: Sc
 		self.builder = builder
 	}
 	
-	public var body: some View {
+	var body: some View {
 		ZStack(alignment: .top) {
 			Color.clear
 			

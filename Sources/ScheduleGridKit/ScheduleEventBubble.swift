@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ScheduleEventBubble<DayInfo: ScheduleViewDayInfo>: View {
+public struct ScheduleEventBubble<DayInfo: ScheduleGridDayInfo>: View {
 	let eventInfo: DayInfo.EventInfo
 	let day: DayInfo
 	let isConflicted: Bool

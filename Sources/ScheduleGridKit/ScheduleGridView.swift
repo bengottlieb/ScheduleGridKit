@@ -1,5 +1,5 @@
 //
-//  ScheduleContainer.swift
+//  ScheduleGridView.swift
 //  Internal
 //
 //  Created by Ben Gottlieb on 3/14/23.
@@ -8,10 +8,10 @@
 import Suite
 
 
-public typealias DropHandler = ((any ScheduleViewEventInfo)?, DroppableScheduleItem?, DateInterval) -> Bool
+public typealias DropHandler = ((any ScheduleGridEventInfo)?, DroppableScheduleItem?, DateInterval) -> Bool
 
 
-public struct ScheduleContainer<DayInfo: ScheduleViewDayInfo, EventView: View>: View {
+public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View>: View {
 	var minuteHeight: CGFloat = 1
 	var startHour = 7
 	var endHour = 18
@@ -59,7 +59,7 @@ public struct ScheduleContainer<DayInfo: ScheduleViewDayInfo, EventView: View>: 
 	}
 }
 
-public extension ScheduleContainer where EventView == ScheduleEventBubble<DayInfo> {
+public extension ScheduleGridView where EventView == ScheduleEventBubble<DayInfo> {
 	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18) {
 		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour) { day, event, conflicted in
 			ScheduleEventBubble(eventInfo: event, day: day, isConflicted: conflicted)

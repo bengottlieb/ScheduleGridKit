@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ScheduleHoursLabels: ScheduleView {
+struct ScheduleHoursLabels: ScheduleView {
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
 	@Environment(\.endHour) var endHour
@@ -16,7 +16,7 @@ public struct ScheduleHoursLabels: ScheduleView {
 
 	@State var frame: CGRect?
 	
-	public var body: some View {
+	var body: some View {
 		Color.clear
 		.frame(height: totalDayHeight + hourLabelHeight)
 		.frame(maxWidth: 30, alignment: .leading)

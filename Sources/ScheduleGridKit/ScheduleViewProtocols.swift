@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public protocol ScheduleViewEventInfo: Identifiable, Hashable, Equatable {
+public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var id: String { get }
 	var start: Date.Time { get }
 	var duration: TimeInterval { get }
@@ -16,22 +16,22 @@ public protocol ScheduleViewEventInfo: Identifiable, Hashable, Equatable {
 	var title: String { get }
 }
 
-public protocol DeletableScheduleViewEvent {
+public protocol DeletableScheduleGridEvent {
 	func delete()
 }
 
-public protocol ScheduleViewDayInfo: Identifiable, ObservableObject, Equatable {
-	associatedtype EventInfo: ScheduleViewEventInfo
+public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
+	associatedtype EventInfo: ScheduleGridEventInfo
 	var events: [EventInfo] { get }
 	var date: Date { get }
-	
+
 	func conflicts(for proposedEvent: EventInfo, on day: Self) -> [EventInfo]
 	func remove(event: EventInfo)
 	func proposedEvent(from info: DroppableScheduleItem, at interval: DateInterval) -> EventInfo?
 	func movedEvent(from event: EventInfo, to interval: DateInterval) -> EventInfo?
 }
 
-extension Array where Element: ScheduleViewDayInfo {
+extension Array where Element: ScheduleGridDayInfo {
 	subscript(date: Date) -> Element? {
 		for item in self {
 			if item.date.isSameDay(as: date) { return item }
