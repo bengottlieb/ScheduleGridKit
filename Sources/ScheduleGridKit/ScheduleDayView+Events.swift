@@ -9,7 +9,7 @@ import SwiftUI
 
 extension ScheduleDayView {
 	func delete(event: DayInfo.EventInfo) {
-		(event as? DeletableScheduleGridEvent)?.delete()
+		(event as? DeletableScheduleGridEvent)?.delete(from: day)
 	}
 	
 	func dragInfo(for event: DayInfo.EventInfo) -> DraggedEventInfo {

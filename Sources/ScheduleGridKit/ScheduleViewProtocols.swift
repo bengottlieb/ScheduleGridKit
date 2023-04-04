@@ -24,7 +24,7 @@ extension ScheduleGridEventInfo {
 }
 
 public protocol DeletableScheduleGridEvent {
-	func delete()
+	func delete(from: some ScheduleGridDayInfo)
 }
 
 public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
