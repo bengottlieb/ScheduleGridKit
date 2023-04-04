@@ -18,6 +18,10 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var canAdjustTime: Bool { get }
 }
 
+extension ScheduleGridEventInfo {
+	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
+}
+
 public protocol DeletableScheduleGridEvent {
 	func delete()
 }
@@ -32,6 +36,12 @@ public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	func proposedEvent(from info: DroppableScheduleItem, at interval: DateInterval) -> EventInfo?
 	func movedEvent(from event: EventInfo, to interval: DateInterval) -> EventInfo?
 	func setTime(_ range: Date.TimeRange, for event: EventInfo)
+}
+
+extension ScheduleGridDayInfo {
+	func event(withID id: String) -> EventInfo? {
+		events.first { $0.id == id }
+	}
 }
 
 extension Array where Element: ScheduleGridDayInfo {
