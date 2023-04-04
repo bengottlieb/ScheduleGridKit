@@ -37,16 +37,15 @@ extension ScheduleDayView {
 				}
 			}
 		}
-		.frame(height: height(forMinutes: Int(event.duration / .minute)))
-		.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
 		.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
 		.contextMenu {
 			Button("Edit") { }
-			Button("Delete", role: .destructive) { delete(event: event) }
-				.disabled(!(event is DeletableScheduleGridEvent))
-		} preview: {
-			Text("Preview This!")
+			if event is DeletableScheduleGridEvent {
+				Button("Delete", role: .destructive) { delete(event: event) }
+			}
 		}
+		.frame(height: height(forMinutes: Int(event.duration / .minute)))
+		.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
 	}
 }
 
