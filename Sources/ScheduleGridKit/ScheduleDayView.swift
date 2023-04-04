@@ -84,7 +84,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			
 			if let info = dropped as? DraggedEventInfo, let day = info.day as? DayInfo, let event = info.eventInfo as? DayInfo.EventInfo {
 				day.remove(event: event)
-				return dropHandler(event, nil, newInterval)
+				return dropHandler(event, nil, DateInterval(start: targetDate, duration: info.eventInfo.duration))
 			} else if let item = dropped as? DroppableScheduleItem {
 				return dropHandler(nil, item, newInterval)
 			}

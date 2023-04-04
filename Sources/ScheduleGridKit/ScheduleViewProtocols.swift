@@ -19,6 +19,7 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 }
 
 extension ScheduleGridEventInfo {
+	var end: Date.Time { range.end }
 	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
 }
 
@@ -36,6 +37,7 @@ public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	func proposedEvent(from info: DroppableScheduleItem, at interval: DateInterval) -> EventInfo?
 	func movedEvent(from event: EventInfo, to interval: DateInterval) -> EventInfo?
 	func setTime(_ range: Date.TimeRange, for event: EventInfo)
+	func finishedResizing(_ start: EventInfo, to final: EventInfo)
 }
 
 extension ScheduleGridDayInfo {

@@ -14,27 +14,25 @@ extension ScheduleDayView {
 		let event: DayInfo.EventInfo
 		let minuteHeight: Double
 		
-		@State private var initialDuration: TimeInterval = 0
-		@State private var initialStart: TimeInterval = 0
-		private var initialEnd: TimeInterval { initialStart + initialDuration }
+		@State private var initialEvent: DayInfo.EventInfo?
+		private var initialEnd: TimeInterval { initialEvent?.end.timeInterval ?? 0 }
 
 		var body: some View {
 			Rectangle()
-				.fill(Color.blue)
+				.fill(Color.white.opacity(0.01))
 				.frame(height: 10)
 				.gesture(dragGesture)
 		}
 		
 		var dragGesture: some Gesture {
 			DragGesture(minimumDistance: 15, coordinateSpace: .global).onChanged { action in
-				if initialDuration == 0 {
-					initialDuration = event.duration
-					initialStart = event.start.timeInterval
+				if initialEvent == nil {
+					initialEvent = day.event(withID: event.id) ?? event
 				}
 				let granularity = 15.0
 				
 				if top {
-					let newStartY = (TimeInterval(initialStart.minutes) * minuteHeight) + action.translation.height
+					let newStartY = (TimeInterval(initialEvent!.start.timeInterval.minutes) * minuteHeight) + action.translation.height
 					let newStartMinute = newStartY / minuteHeight
 					let roundedStart = round(newStartMinute / granularity) * granularity
 					let endTime = (TimeInterval(initialEnd.minutes) * minuteHeight)
@@ -51,15 +49,16 @@ extension ScheduleDayView {
 					let newEndMinutes = newEndY / minuteHeight
 					let roundedEnd = (round(newEndMinutes / granularity) * granularity) * .minute
 					
-					if roundedEnd <= (initialStart + granularity * .minute) { return }
-					let newDuration = roundedEnd - initialStart
-					let range = Date.TimeRange(start: event.start, duration: newDuration)
+					if roundedEnd <= (initialEvent!.start.timeInterval + granularity * .minute) { return }
+					let newDuration = roundedEnd - initialEvent!.start.timeInterval
+					let range = Date.TimeRange(start: Date.Time(timeInterval: initialEvent!.start.timeInterval), duration: newDuration)
 					day.setTime(range, for: event)
 				}
 			}
 			.onEnded { ended in
-				initialDuration = 0
-				print("Ended \(day.event(withID: event.id)!.range)")
+				initialEvent = nil
+				guard let final = day.event(withID: event.id) else { return }
+				day.finishedResizing(event, to: final)
 			}
 		}
 	}

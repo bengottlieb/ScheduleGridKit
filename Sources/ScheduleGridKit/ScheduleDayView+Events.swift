@@ -26,6 +26,7 @@ extension ScheduleDayView {
 		let isConflicted = conflicts.contains(event)
 		ZStack {
 			eventBuilder(day, event, isConflicted)
+			
 			if event.canAdjustTime {
 				VStack {
 					if height(forMinutes: event.duration.minutes) > 50 {		// only show the top handle if it's long enough duration
