@@ -15,6 +15,7 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var foregroundColor: Color { get }
 	var title: String { get }
 	var isAllDay: Bool { get }
+	var canAdjustTime: Bool { get }
 }
 
 public protocol DeletableScheduleGridEvent {
@@ -30,6 +31,7 @@ public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	func remove(event: EventInfo)
 	func proposedEvent(from info: DroppableScheduleItem, at interval: DateInterval) -> EventInfo?
 	func movedEvent(from event: EventInfo, to interval: DateInterval) -> EventInfo?
+	func setTime(_ range: Date.TimeRange, for event: EventInfo)
 }
 
 extension Array where Element: ScheduleGridDayInfo {

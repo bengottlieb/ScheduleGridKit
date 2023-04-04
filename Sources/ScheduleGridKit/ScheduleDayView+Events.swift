@@ -24,17 +24,28 @@ extension ScheduleDayView {
 	
 	@ViewBuilder func viewForEvent(event: DayInfo.EventInfo) -> some View {
 		let isConflicted = conflicts.contains(event)
-		eventBuilder(day, event, isConflicted)
-			.frame(height: height(forMinutes: Int(event.duration / .minute)))
-			.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
-			.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
-			.contextMenu {
-				Button("Edit") { }
-				Button("Delete", role: .destructive) { delete(event: event) }
-					.disabled(!(event is DeletableScheduleGridEvent))
-			} preview: {
-				Text("Preview This!")
+		ZStack {
+			eventBuilder(day, event, isConflicted)
+			if event.canAdjustTime {
+				VStack {
+					if height(forMinutes: event.duration.minutes) > 50 {		// only show the top handle if it's long enough duration
+						DragHandle(top: true, day: day, event: event, minuteHeight: minuteHeight)
+					}
+					Spacer()
+					DragHandle(top: false, day: day, event: event, minuteHeight: minuteHeight)
+				}
 			}
+		}
+		.frame(height: height(forMinutes: Int(event.duration / .minute)))
+		.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
+		.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
+		.contextMenu {
+			Button("Edit") { }
+			Button("Delete", role: .destructive) { delete(event: event) }
+				.disabled(!(event is DeletableScheduleGridEvent))
+		} preview: {
+			Text("Preview This!")
+		}
 	}
 }
 
