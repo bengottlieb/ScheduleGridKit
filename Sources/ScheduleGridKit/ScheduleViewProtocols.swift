@@ -27,6 +27,10 @@ public protocol DeletableScheduleGridEvent {
 	func delete(from: some ScheduleGridDayInfo)
 }
 
+public protocol ContextMenuProvidingScheduleGridEvent {
+	func contextMenu(from: some ScheduleGridDayInfo) -> AnyView
+}
+
 public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	associatedtype EventInfo: ScheduleGridEventInfo
 	var events: [EventInfo] { get }

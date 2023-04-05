@@ -39,9 +39,13 @@ extension ScheduleDayView {
 		}
 		.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
 		.contextMenu {
-			Button("Edit") { }
-			if event is DeletableScheduleGridEvent {
-				Button("Delete", role: .destructive) { delete(event: event) }
+			if let view = (event as? ContextMenuProvidingScheduleGridEvent)?.contextMenu(from: day) {
+				view
+			} else {
+				Button("Edit") { }
+				if event is DeletableScheduleGridEvent {
+					Button("Delete", role: .destructive) { delete(event: event) }
+				}
 			}
 		}
 		.frame(height: height(forMinutes: Int(event.duration / .minute)))
