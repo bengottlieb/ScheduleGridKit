@@ -35,8 +35,8 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 	
 	var body: some View {
 		GeometryReader { geo in
-			VStack(spacing: 0) {
-				HStack(spacing: 0) {
+			VStack(alignment: .leading, spacing: 0) {
+				HStack(alignment: .top, spacing: 0) {
 					ForEach(days) { day in
 						VStack {
 							headerBuilder(day)
@@ -46,7 +46,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 									.frame(height: minuteHeight * 30.0)
 							}
 						}
-						.frame(width: (geo.size.width - hoursWidth) / CGFloat(days.count), alignment: .center)
+						.frame(width: (geo.size.width - (hoursWidth + scheduleDaySpacing * Double(days.count - 1))) / CGFloat(days.count), alignment: .center)
 						.padding(.trailing, scheduleDaySpacing)
 					}
 				}

@@ -5,7 +5,7 @@
 //  Created by Ben Gottlieb on 3/15/23.
 //
 
-import SwiftUI
+import Suite
 
 struct ScheduleHoursLabels: ScheduleView {
 	let width: CGFloat
@@ -19,18 +19,13 @@ struct ScheduleHoursLabels: ScheduleView {
 	
 	var body: some View {
 		Color.clear
-		.frame(height: totalDayHeight + hourLabelHeight)
-		.frame(maxWidth: width, alignment: .leading)
-		.background {
-			ScheduleHoursView(showHours: true)
-				.padding(paddingDueToHourLabel)
-		}
-		.background {
-			GeometryReader { geo in
-				Color.clear
-					.onAppear { frame = geo.frame(in: .global) }
+			.frame(height: totalDayHeight + hourLabelHeight)
+			.frame(width: width, alignment: .leading)
+			.background {
+				ScheduleHoursView(showHours: true)
+					.padding(paddingDueToHourLabel)
 			}
-		}
+			.frameReporting($frame ?? .zero)
 	}
 }
 
