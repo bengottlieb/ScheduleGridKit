@@ -54,6 +54,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 						.padding(.trailing, scheduleDaySpacing)
 					}
 				}
+				.multilineTextAlignment(.center)
 				.padding(.leading, hoursWidth)
 
 				let content = HStack(spacing: 0) {
