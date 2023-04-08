@@ -14,23 +14,27 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 
 	let days: [DayInfo]
 	var hoursWidth = 30.0
+	var isScrollable: Bool
 	let headerBuilder: DayHeaderBuilder
 	let eventBuilder: EventViewBuilder
 	@Binding var proposedDropItem: DayInfo.EventInfo?
 	@Binding var proposedDropDay: DayInfo?
+	@Binding var selectedEvent: DayInfo.EventInfo?
 	private var conflicts: [DayInfo.EventInfo]
 	@Environment(\.scheduleDaySpacing) var scheduleDaySpacing
 	@Environment(\.minuteHeight) var minuteHeight
 
 	public enum WeekendStyle { case none, startSunday, startMonday }
 	
-	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo], headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
+	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, isScrollable: Bool, conflicts: [DayInfo.EventInfo], selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
 		self.days = days
 		self.conflicts = conflicts
 		_proposedDropItem = proposedDropItem
 		_proposedDropDay = proposedDropDay
+		_selectedEvent = selectedEvent
 		self.eventBuilder = eventBuilder
 		self.headerBuilder = headerBuilder
+		self.isScrollable = isScrollable
 	}
 	
 	var body: some View {
@@ -52,14 +56,18 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 				}
 				.padding(.leading, hoursWidth)
 
-				ScrollView {
-					HStack(spacing: 0) {
-						ScheduleHoursLabels(width: hoursWidth)
-						ForEach(days) { day in
-							ScheduleDayView(day: day, proposedDropItem: $proposedDropItem, proposedDropDay: $proposedDropDay, conflicts: conflicts, headerBuilder: headerBuilder, eventBuilder: eventBuilder)
-								.padding(.trailing, scheduleDaySpacing)
-						}
-					}
+				let content = HStack(spacing: 0) {
+					ScheduleHoursLabels(width: hoursWidth)
+					  ForEach(days) { day in
+						  ScheduleDayView(day: day, proposedDropItem: $proposedDropItem, proposedDropDay: $proposedDropDay, conflicts: conflicts, selectedEvent: $selectedEvent, headerBuilder: headerBuilder, eventBuilder: eventBuilder)
+							  .padding(.trailing, scheduleDaySpacing)
+					  }
+				  }
+				
+				if isScrollable {
+					ScrollView { content }
+				} else {
+					content
 				}
 			}
 		}

@@ -25,7 +25,7 @@ extension ScheduleDayView {
 		}
 		
 		var dragGesture: some Gesture {
-			DragGesture(minimumDistance: 15, coordinateSpace: .global).onChanged { action in
+			DragGesture(minimumDistance: 3, coordinateSpace: .global).onChanged { action in
 				if initialEvent == nil {
 					initialEvent = day.event(withID: event.id) ?? event
 				}

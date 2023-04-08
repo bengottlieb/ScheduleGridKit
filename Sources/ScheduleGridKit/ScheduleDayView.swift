@@ -15,6 +15,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	var conflicts: [DayInfo.EventInfo]
 	@Binding var proposedDropItem: DayInfo.EventInfo?
 	@Binding var proposedDropDay: DayInfo?
+	@Binding var selectedEvent: DayInfo.EventInfo?
 	let eventBuilder: EventViewBuilder
 	let headerBuilder: DayHeaderBuilder
 
@@ -27,10 +28,11 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	@Environment(\.dropHandler) var dropHandler
 	@State var frame: CGRect?
 	
-	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
+	init(day: DayInfo, proposedDropItem: Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, conflicts: [DayInfo.EventInfo] = [], selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
 		self.day = day
 		_proposedDropItem = proposedDropItem
 		_proposedDropDay = proposedDropDay
+		_selectedEvent = selectedEvent
 		self.conflicts = conflicts
 		self.headerBuilder = headerBuilder
 		self.eventBuilder = eventBuilder
