@@ -108,7 +108,7 @@ extension ScheduleView {
 		if actualY < frame.minY || actualY > frame.maxY { return nil }
 		
 		let raw = TimeInterval((actualY - frame.minY) / minuteHeight) + TimeInterval(startHour * 60)
-		return raw - TimeInterval(minuteHeight * -15)
+		return raw - TimeInterval(minuteHeight * 15)
 	}
 	
 	func height(forMinutes minutes: Int) -> CGFloat {
@@ -124,7 +124,7 @@ extension ScheduleView {
 	}
 	
 	func minutesFromMidnight(for y: CGFloat) -> Int? {
-		guard let frame, let minute = minuteOffset(for: y, in: frame) else { return nil }
+		guard let frame, let minute = minuteOffset(for: y, in: CGRect(origin: .zero, size: frame.size)) else { return nil }
 		
 		return Int(round(minute / roundToNearestMinute) * roundToNearestMinute)
 	}

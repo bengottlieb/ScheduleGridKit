@@ -83,7 +83,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			let targetDate = day.date.dateBySetting(time: Date.Time(timeInterval: TimeInterval(start) * 60))
 			let newInterval = DateInterval(start: targetDate, duration: newEventDuration)
 			clearDrag()
-			
+						
 			if let info = dropped as? DraggedEventInfo, let day = info.day as? DayInfo, let event = info.eventInfo as? DayInfo.EventInfo {
 				if day != self.day { day.remove(event: event) }
 				return dropHandler(event, nil, DateInterval(start: targetDate, duration: info.eventInfo.duration))
