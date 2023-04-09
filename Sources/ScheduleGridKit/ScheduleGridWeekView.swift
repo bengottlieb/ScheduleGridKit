@@ -15,6 +15,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 	let days: [DayInfo]
 	var hoursWidth = 30.0
 	var isScrollable: Bool
+	@Binding var isScrolling: Bool
 	let headerBuilder: DayHeaderBuilder
 	let eventBuilder: EventViewBuilder
 	@Binding var proposedDropItem: DayInfo.EventInfo?
@@ -26,7 +27,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 
 	public enum WeekendStyle { case none, startSunday, startMonday }
 	
-	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, isScrollable: Bool, conflicts: [DayInfo.EventInfo], selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
+	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, isScrollable: Bool, isScrolling: Binding<Bool>, conflicts: [DayInfo.EventInfo], selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
 		self.days = days
 		self.conflicts = conflicts
 		_proposedDropItem = proposedDropItem
@@ -35,6 +36,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 		self.eventBuilder = eventBuilder
 		self.headerBuilder = headerBuilder
 		self.isScrollable = isScrollable
+		_isScrolling = isScrolling
 	}
 	
 	var body: some View {
@@ -66,7 +68,10 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 				  }
 				
 				if isScrollable {
-					ScrollView { content }
+					ScrollView {
+						ScrollCanary(isScrolling: $isScrolling)
+						content
+					}
 				} else {
 					content
 				}

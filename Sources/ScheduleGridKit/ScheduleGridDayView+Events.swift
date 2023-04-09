@@ -37,7 +37,7 @@ extension ScheduleDayView {
 				}
 			}
 		}
-		.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true)
+		.makeDraggable(type: DraggedEventInfo.dragType, object: dragInfo(for: event), hideWhenDragging: true, draggedOpacity: 0.2)
 		.onTapGesture { selectedEvent = event }
 		.contextMenu {
 			if let view = (event as? ContextMenuProvidingScheduleGridEvent)?.contextMenu(from: day) {

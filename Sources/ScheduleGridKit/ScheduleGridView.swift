@@ -21,6 +21,7 @@ public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, Da
 	let headerBuilder: ScheduleDayHeaderBuilder
 	let eventBuilder: ScheduleEventViewBuilder
 	@Binding var selectedEvent: DayInfo.EventInfo?
+	@Binding var isScrolling: Bool
 
 	public typealias ScheduleEventViewBuilder = (DayInfo, DayInfo.EventInfo, Bool) -> EventView
 	public typealias ScheduleDayHeaderBuilder = (DayInfo) -> DayHeaderView
@@ -29,7 +30,7 @@ public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, Da
 	@State private var proposedDropDay: DayInfo?
 	@State private var conflicts: [DayInfo.EventInfo] = []
 
-	public init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping ScheduleDayHeaderBuilder, eventBuilder: @escaping ScheduleEventViewBuilder) {
+	public init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping ScheduleDayHeaderBuilder, eventBuilder: @escaping ScheduleEventViewBuilder) {
 		self.minuteHeight = minuteHeight
 		self.startHour = startHour
 		self.endHour = endHour
@@ -37,11 +38,12 @@ public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, Da
 		self.headerBuilder = headerBuilder
 		self.eventBuilder = eventBuilder
 		self.isScrollable = isScrollable
+		_isScrolling = isScrolling
 		_selectedEvent = selectedEvent
 	}
 	
 	public var body: some View {
-		ScheduleWeekView(days: days, proposedDropItem: $proposedDropItem, proposedDropDay: $proposedDropDay, isScrollable: isScrollable, conflicts: conflicts, selectedEvent: $selectedEvent, headerBuilder: headerBuilder, eventBuilder: eventBuilder)
+		ScheduleWeekView(days: days, proposedDropItem: $proposedDropItem, proposedDropDay: $proposedDropDay, isScrollable: isScrollable, isScrolling: $isScrolling, conflicts: conflicts, selectedEvent: $selectedEvent, headerBuilder: headerBuilder, eventBuilder: eventBuilder)
 			.environment(\.minuteHeight, minuteHeight)
 			.environment(\.startHour, startHour)
 			.environment(\.endHour, endHour)
@@ -65,16 +67,16 @@ public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, Da
 }
 
 public extension ScheduleGridView where EventView == ScheduleEventBubble<DayInfo>, DayHeaderView == EmptyView {
-	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, selectedEvent: Binding<DayInfo.EventInfo?>) {
-		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour, isScrollable: isScrollable, selectedEvent: selectedEvent, headerBuilder: { _ in EmptyView() }, eventBuilder: { day, event, conflicted in
+	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>) {
+		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour, isScrollable: isScrollable, isScrolling: isScrolling, selectedEvent: selectedEvent, headerBuilder: { _ in EmptyView() }, eventBuilder: { day, event, conflicted in
 			ScheduleEventBubble(eventInfo: event, day: day, isConflicted: conflicted)
 		})
 	}
 }
 
 public extension ScheduleGridView where EventView == ScheduleEventBubble<DayInfo> {
-	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping (DayInfo) -> DayHeaderView) {
-		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour, isScrollable: isScrollable, selectedEvent: selectedEvent, headerBuilder: headerBuilder, eventBuilder: { day, event, conflicted in
+	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping (DayInfo) -> DayHeaderView) {
+		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour, isScrollable: isScrollable, isScrolling: isScrolling, selectedEvent: selectedEvent, headerBuilder: headerBuilder, eventBuilder: { day, event, conflicted in
 			ScheduleEventBubble(eventInfo: event, day: day, isConflicted: conflicted)
 		})
 	}
