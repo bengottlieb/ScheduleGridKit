@@ -47,10 +47,19 @@ struct DropHandlerEnvironmentKey: EnvironmentKey {
 	static let defaultValue: DropHandler = { _, _, _ in return false }
 }
 
+struct CreateNewItemHandlerEnvironmentKey: EnvironmentKey {
+	static let defaultValue: CreateNewItemHandler? = nil
+}
+
 extension EnvironmentValues {
 	var dropHandler: DropHandler {
 		get { self[DropHandlerEnvironmentKey.self] }
 		set { self[DropHandlerEnvironmentKey.self] = newValue }
+	}
+
+	var createNewItemHandler: CreateNewItemHandler? {
+		get { self[CreateNewItemHandlerEnvironmentKey.self] }
+		set { self[CreateNewItemHandlerEnvironmentKey.self] = newValue }
 	}
 
 	public var minuteHeight: CGFloat {

@@ -24,7 +24,8 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 	private var conflicts: [DayInfo.EventInfo]
 	@Environment(\.scheduleDaySpacing) var scheduleDaySpacing
 	@Environment(\.minuteHeight) var minuteHeight
-
+	@Environment(\.createNewItemHandler) var createNewItemHandler
+	
 	public enum WeekendStyle { case none, startSunday, startMonday }
 	
 	public init(days: [DayInfo], proposedDropItem: 	Binding<DayInfo.EventInfo?>, proposedDropDay: Binding<DayInfo?>, isScrollable: Bool, isScrolling: Binding<Bool>, conflicts: [DayInfo.EventInfo], selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping DayHeaderBuilder, eventBuilder: @escaping EventViewBuilder) {
