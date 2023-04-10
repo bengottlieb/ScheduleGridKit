@@ -58,6 +58,12 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 				.padding(paddingDueToHourLabel)
 		}
 		.reportGeometry(frame: $frame)
+		.positionedLongPressGesture { pt in
+			guard let frame, let minute = minuteOffset(for: pt.y, in: frame), let createNewItemHandler else { return }
+
+			let start = day.date.midnight.addingTimeInterval(minute * 60)
+			createNewItemHandler(start.day, start.time)
+		}
 		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
 			guard let point, let minute = minutesFromMidnight(for: point.y) else {
 				clearDrag()
@@ -96,14 +102,6 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			}
 			return false
 		}
-		//.gesture(createNewItemGesture)
-		.positionedLongPressGesture { pt in
-			print("Long pressed at \(pt)")
-			guard let frame, let minute = minuteOffset(for: pt.y, in: frame), let createNewItemHandler else { return }
-			
-			let start = day.date.midnight.addingTimeInterval(minute * 60)
-			createNewItemHandler(start, false)
-		}
 	}
 	
 	func clearDrag() {
@@ -111,74 +109,5 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			proposedDropDay = nil
 			proposedDropItem = nil
 		}
-	}
-	
-	var createNewItemGesture: some Gesture {
-		DragGesture(minimumDistance: 0, coordinateSpace: .local)
-			.onChanged { info in
-				if longPressLocation == nil {
-					longPressLocation = info.location
-					longPressTimer = Timer.scheduledTimer(withTimeInterval: longPressDuration, repeats: false) { _ in
-						guard let offset = longPressLocation?.y, let frame, let minute = minuteOffset(for: offset, in: frame), let createNewItemHandler else { return }
-						
-						let start = day.date.midnight.addingTimeInterval(minute * 60)
-						createNewItemHandler(start, false)
-						longPressTimer = nil
-					}
-				}
-				
-				if info.translation.largestDimension > 10 { longPressTimer?.invalidate() }
-			}
-			.onEnded { _ in
-				longPressTimer?.invalidate()
-				longPressTimer = nil
-				longPressLocation = nil
-			}
-	}
-}
-
-extension View {
-	func positionedLongPressGesture(duration: TimeInterval = 1.0, completion: @escaping (CGPoint) -> Void) -> some View {
-		self
-			.background {
-				PositionedLongPressGesture(duration: duration, completion: completion)
-			}
-	}
-}
-
-struct PositionedLongPressGesture: View {
-	@State private var location: CGPoint?
-	@State private var timer: Timer?
-	let longPressDuration: TimeInterval
-	var completion: (CGPoint) -> Void
-
-	init(duration: TimeInterval = 1.0, completion: @escaping (CGPoint) -> Void) {
-		self.longPressDuration = duration
-		self.completion = completion
-	}
-	
-	var body: some View {
-		Color.clear
-			.contentShape(Rectangle())
-			.gesture(
-				DragGesture(minimumDistance: 0, coordinateSpace: .local)
-					.onChanged { info in
-						if location == nil {
-							location = info.location
-							timer = Timer.scheduledTimer(withTimeInterval: longPressDuration, repeats: false) { _ in
-								if let location { completion(location) }
-								timer = nil
-							}
-						}
-						
-						if info.translation.largestDimension > 10 { timer?.invalidate() }
-					}
-					.onEnded { _ in
-						timer?.invalidate()
-						timer = nil
-						location = nil
-					}
-
-			)
 	}
 }

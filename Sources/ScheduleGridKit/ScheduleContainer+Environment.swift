@@ -57,7 +57,7 @@ extension EnvironmentValues {
 		set { self[DropHandlerEnvironmentKey.self] = newValue }
 	}
 
-	var createNewItemHandler: CreateNewItemHandler? {
+	public var createNewItemHandler: CreateNewItemHandler? {
 		get { self[CreateNewItemHandlerEnvironmentKey.self] }
 		set { self[CreateNewItemHandlerEnvironmentKey.self] = newValue }
 	}

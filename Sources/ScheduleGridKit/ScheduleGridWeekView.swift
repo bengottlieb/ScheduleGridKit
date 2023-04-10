@@ -54,6 +54,12 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 							}
 						}
 						.frame(width: (geo.size.width - (hoursWidth + scheduleDaySpacing * Double(days.count - 1))) / CGFloat(days.count), alignment: .center)
+						.positionedLongPressGesture { pt in
+							guard let createNewItemHandler else { return }
+
+							createNewItemHandler(day.date.day, nil)
+						}
+
 						.padding(.trailing, scheduleDaySpacing)
 					}
 				}

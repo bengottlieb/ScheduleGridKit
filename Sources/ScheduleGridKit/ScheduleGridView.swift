@@ -9,7 +9,7 @@ import Suite
 
 
 public typealias DropHandler = ((any ScheduleGridEventInfo)?, DroppableScheduleItem?, DateInterval) -> Bool
-public typealias CreateNewItemHandler = (Date, Bool) -> Void
+public typealias CreateNewItemHandler = (Date.Day, Date.Time?) -> Void
 
 public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: View {
 	var minuteHeight: CGFloat = 1
