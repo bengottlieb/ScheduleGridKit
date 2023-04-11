@@ -54,6 +54,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 							}
 						}
 						.frame(width: (geo.size.width - (hoursWidth + scheduleDaySpacing * Double(days.count - 1))) / CGFloat(days.count), alignment: .center)
+						.contentShape(Rectangle())
 						.positionedLongPressGesture { pt in
 							guard let createNewItemHandler else { return }
 

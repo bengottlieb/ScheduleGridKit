@@ -113,11 +113,11 @@ extension ScheduleView {
 	var hourHeight: CGFloat { minuteHeight * 60 }
 	
 	func minuteOffset(for y: CGFloat, in frame: CGRect) -> TimeInterval? {
-		let actualY = y + paddingDueToHourLabel.top
+		let actualY = y - paddingDueToHourLabel.top
 		if actualY < frame.minY || actualY > frame.maxY { return nil }
 		
 		let raw = TimeInterval((actualY - frame.minY) / minuteHeight) + TimeInterval(startHour * 60)
-		return raw - TimeInterval(minuteHeight * 15)
+		return raw
 	}
 	
 	func height(forMinutes minutes: Int) -> CGFloat {

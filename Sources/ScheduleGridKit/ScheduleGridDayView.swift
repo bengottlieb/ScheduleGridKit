@@ -65,11 +65,13 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			createNewItemHandler(start.day, start.time)
 		}
 		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
-			guard let point, let minute = minutesFromMidnight(for: point.y) else {
+			guard let point, var minute = minutesFromMidnight(for: point.y) else {
 				clearDrag()
 				return false
 			}
 
+			let duration = (dropped as? DraggedEventInfo)?.eventInfo.duration ?? newEventDuration
+			minute -= Int(duration / 120)
 			let targetDate = day.date.dateBySetting(time: Date.Time(timeInterval: TimeInterval(minute) * 60))
 			let newInterval = DateInterval(start: targetDate, duration: newEventDuration)
 
@@ -89,7 +91,9 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 		}) { type, dropped, point in
 			proposedDropItem = nil
 
-			guard let start = minutesFromMidnight(for: point.y) else { return false }
+			guard var start = minutesFromMidnight(for: point.y) else { return false }
+			let duration = (dropped as? DraggedEventInfo)?.eventInfo.duration ?? newEventDuration
+			start -= Int(duration / 120)
 			let targetDate = day.date.dateBySetting(time: Date.Time(timeInterval: TimeInterval(start) * 60))
 			let newInterval = DateInterval(start: targetDate, duration: newEventDuration)
 			clearDrag()
