@@ -13,25 +13,27 @@ extension ScheduleDayView {
 
 	var events: [DayInfo.EventInfo] {
 		var events = day.events.filter { !$0.isAllDay }.filter { $0.id != proposedDropItem?.id }
-		if proposedDropDay == day, let event = proposedDropItem { events.append(event) }
+		if proposedDropDay == day, let event = proposedDropItem, !events.contains(event) {
+			events.append(event)
+		}
 		return events.sorted { $0.start < $1.start }
 	}
 	
-	var eventGroups: [EventGroup] {
-		var groups: [EventGroup] = []
+	var positionedEvents: [PositionedEvent] {
+		var groups: [[DayInfo.EventInfo]] = []
 		let events = events
 		var remaining = events
 		
 		for event in remaining {
-			if !remaining.contains(event) { continue }
+			if !remaining.contains(event) || event == proposedDropItem { continue }
 					
-			var group = EventGroup(events: [event])
+			var group = [event]
 			remaining.remove(event)
 			
 			for next in remaining {
-				if group.contains(event: next) { continue }
-				if group.events.overlaps(with: next) {
-					group.events.append(next)
+				if group.contains(next) { continue }
+				if group.overlaps(with: next) {
+					group.append(next)
 					remaining.remove(next)
 				}
 			}
@@ -39,13 +41,14 @@ extension ScheduleDayView {
 			groups.append(group)
 		}
 		
-		return groups
+		return groups.flatMap { array in array.indices.map { idx in PositionedEvent(event: array[idx], position: idx, count: array.count) }}
 	}
 	
-	struct EventGroup: Identifiable {
-		let id = UUID()
-		var events: [DayInfo.EventInfo]
-		func contains(event: DayInfo.EventInfo) -> Bool { events.contains { $0.id == event.id }}
+	struct PositionedEvent: Identifiable {
+		var id: String { event.id }
+		let event: DayInfo.EventInfo
+		let position: Int
+		let count: Int
 	}
 	
 	@ViewBuilder func viewForEvent(event: DayInfo.EventInfo) -> some View {

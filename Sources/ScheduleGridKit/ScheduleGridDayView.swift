@@ -48,21 +48,26 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	}
 	
 	var body: some View {
-		ZStack(alignment: .top) {
-			Color.clear
-			
-			if shrinkOverlappingEvents {
-				ForEach(eventGroups) { group in
-					ForEach(group.events) { event in
+		GeometryReader { geo in
+			ZStack(alignment: .top) {
+				Color.clear
+				if shrinkOverlappingEvents {
+					ForEach(positionedEvents) { event in
+						if event.count <= 1 {
+							viewForEvent(event: event.event)
+						} else {
+							let width = geo.width / Double(event.count)
+							viewForEvent(event: event.event)
+								.frame(width: width)
+								.offset(x: width * Double(event.position), y: 0)
+						}
+					}
+				} else {
+					ForEach(events) { event in
 						viewForEvent(event: event)
 					}
 				}
-			} else {
-				ForEach(events) { event in
-					viewForEvent(event: event)
-				}
 			}
-			
 		}
 		.frame(height: totalDayHeight + hourLabelHeight)
 		.frame(maxWidth: .infinity, alignment: .leading)
