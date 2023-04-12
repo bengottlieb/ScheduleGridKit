@@ -18,6 +18,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	@Binding var selectedEvent: DayInfo.EventInfo?
 	let eventBuilder: EventViewBuilder
 	let headerBuilder: DayHeaderBuilder
+	var shrinkOverlappingEvents = true
 
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
@@ -43,11 +44,21 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	}
 	
 	var body: some View {
+		let _ = Self._printChanges()
 		ZStack(alignment: .top) {
 			Color.clear
 			
-			ForEach(events) { event in
-				viewForEvent(event: event)
+			if shrinkOverlappingEvents {
+				ForEach(eventGroups) { group in
+					let _ = print("Drawing \(group.events.count)")
+					ForEach(group.events) { event in
+						viewForEvent(event: event)
+					}
+				}
+			} else {
+				ForEach(events) { event in
+					viewForEvent(event: event)
+				}
 			}
 			
 		}

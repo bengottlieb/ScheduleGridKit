@@ -7,30 +7,6 @@
 
 import SwiftUI
 
-public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
-	var id: String { get }
-	var start: Date.Time { get }
-	var duration: TimeInterval { get }
-	var backgroundColor: Color { get }
-	var foregroundColor: Color { get }
-	var title: String { get }
-	var isAllDay: Bool { get }
-	var canAdjustTime: Bool { get }
-}
-
-extension ScheduleGridEventInfo {
-	var end: Date.Time { range.end }
-	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
-}
-
-public protocol DeletableScheduleGridEvent {
-	func delete(from: some ScheduleGridDayInfo)
-}
-
-public protocol ContextMenuProvidingScheduleGridEvent {
-	func contextMenu(from: some ScheduleGridDayInfo) -> AnyView
-}
-
 public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	associatedtype EventInfo: ScheduleGridEventInfo
 	var events: [EventInfo] { get }
@@ -58,3 +34,42 @@ extension Array where Element: ScheduleGridDayInfo {
 		return nil
 	}
 }
+
+
+public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
+	var id: String { get }
+	var start: Date.Time { get }
+	var duration: TimeInterval { get }
+	var backgroundColor: Color { get }
+	var foregroundColor: Color { get }
+	var title: String { get }
+	var isAllDay: Bool { get }
+	var canAdjustTime: Bool { get }
+}
+
+extension ScheduleGridEventInfo {
+	var end: Date.Time { range.end }
+	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
+	
+	func overlaps(with other: Self) -> Bool {
+		self.range.intersection(with: other.range) != nil
+	}
+}
+
+extension Array where Element: ScheduleGridEventInfo {
+	func overlaps(with item: Element) -> Bool {
+		for element in self {
+			if element.overlaps(with: item) { return true }
+		}
+		return false
+	}
+}
+
+public protocol DeletableScheduleGridEvent {
+	func delete(from: some ScheduleGridDayInfo)
+}
+
+public protocol ContextMenuProvidingScheduleGridEvent {
+	func contextMenu(from: some ScheduleGridDayInfo) -> AnyView
+}
+

@@ -8,18 +8,44 @@
 import SwiftUI
 
 extension ScheduleDayView {
-	func delete(event: DayInfo.EventInfo) {
-		(event as? DeletableScheduleGridEvent)?.delete(from: day)
-	}
-	
-	func dragInfo(for event: DayInfo.EventInfo) -> DraggedEventInfo {
-		.init(day: day, eventInfo: event)
-	}
+	func delete(event: DayInfo.EventInfo) { (event as? DeletableScheduleGridEvent)?.delete(from: day) }
+	func dragInfo(for event: DayInfo.EventInfo) -> DraggedEventInfo { .init(day: day, eventInfo: event) }
 
 	var events: [DayInfo.EventInfo] {
-		var events = day.events.filter { !$0.isAllDay }
+		var events = day.events.filter { !$0.isAllDay }.filter { $0.id != proposedDropItem?.id }
 		if proposedDropDay == day, let event = proposedDropItem { events.append(event) }
 		return events
+	}
+	
+	var eventGroups: [EventGroup] {
+		var groups: [EventGroup] = []
+		let events = events.sorted { $0.start < $1.start }
+		var remaining = events
+		
+		for event in remaining {
+			if !remaining.contains(event) { continue }
+					
+			var group = EventGroup(events: [event])
+			remaining.remove(event)
+			
+			for next in remaining {
+				if group.contains(event: next) { continue }
+				if group.events.overlaps(with: next) {
+					group.events.append(next)
+					remaining.remove(next)
+				}
+			}
+			
+			groups.append(group)
+		}
+		
+		return groups
+	}
+	
+	struct EventGroup: Identifiable {
+		let id = UUID()
+		var events: [DayInfo.EventInfo]
+		func contains(event: DayInfo.EventInfo) -> Bool { events.contains { $0.id == event.id }}
 	}
 	
 	@ViewBuilder func viewForEvent(event: DayInfo.EventInfo) -> some View {
@@ -53,8 +79,6 @@ extension ScheduleDayView {
 		.offset(y: offset(ofMinutes: Int(event.start.timeInterval / .minute)))
 	}
 }
-
-
 
 public struct DraggedEventInfo {
 	public static let dragType = "DraggedEventInfo"
