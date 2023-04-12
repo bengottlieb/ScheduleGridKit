@@ -62,7 +62,7 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 					guard let createNewItemHandler, days.isNotEmpty else { return }
 					let index = Int(pt.x / (geo.width / Double(days.count)))
 					if index < days.count {
-						createNewItemHandler(days[index].date.day, nil)
+						createNewItemHandler.contents(days[index].date.day, nil)
 					}
 				}
 				.multilineTextAlignment(.center)

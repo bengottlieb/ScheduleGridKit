@@ -37,27 +37,27 @@ struct NewEventDurationEnvironmentKey: EnvironmentKey {
 
 struct DropHandlerPreferenceKey: PreferenceKey {
 	static func reduce(value: inout IDBox<DropHandler, String>?, nextValue: () -> IDBox<DropHandler, String>?) {
-		value = nextValue() ?? value
+		value = value ?? nextValue()
 	}
 	
 	static var defaultValue: IDBox<DropHandler, String>? = nil
 }
 
 struct DropHandlerEnvironmentKey: EnvironmentKey {
-	static let defaultValue: DropHandler = { _, _, _ in return false }
+	static let defaultValue: IDBox<DropHandler, String>? = nil
 }
 
 struct CreateNewItemHandlerEnvironmentKey: EnvironmentKey {
-	static let defaultValue: CreateNewItemHandler? = nil
+	static let defaultValue: IDBox<CreateNewItemHandler, String>? = nil
 }
 
 extension EnvironmentValues {
-	var dropHandler: DropHandler {
+	var dropHandler: IDBox<DropHandler, String>? {
 		get { self[DropHandlerEnvironmentKey.self] }
 		set { self[DropHandlerEnvironmentKey.self] = newValue }
 	}
 
-	public var createNewItemHandler: CreateNewItemHandler? {
+	public var createNewItemHandler: IDBox<CreateNewItemHandler, String>? {
 		get { self[CreateNewItemHandlerEnvironmentKey.self] }
 		set { self[CreateNewItemHandlerEnvironmentKey.self] = newValue }
 	}

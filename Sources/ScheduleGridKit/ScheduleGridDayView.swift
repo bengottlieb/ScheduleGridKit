@@ -7,7 +7,7 @@
 
 import Suite
 
-struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: ScheduleView {
+struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: ScheduleView, Equatable {
 	typealias EventViewBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleEventViewBuilder
 	typealias DayHeaderBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleDayHeaderBuilder
 
@@ -19,6 +19,10 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	let eventBuilder: EventViewBuilder
 	let headerBuilder: DayHeaderBuilder
 	var shrinkOverlappingEvents = true
+	
+	static func ==(lhs: Self, rhs: Self) -> Bool {
+		lhs.conflicts == rhs.conflicts && lhs.day == rhs.day
+	}
 
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
@@ -44,13 +48,11 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	}
 	
 	var body: some View {
-		let _ = Self._printChanges()
 		ZStack(alignment: .top) {
 			Color.clear
 			
 			if shrinkOverlappingEvents {
 				ForEach(eventGroups) { group in
-					let _ = print("Drawing \(group.events.count)")
 					ForEach(group.events) { event in
 						viewForEvent(event: event)
 					}
@@ -73,7 +75,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 			guard let frame, let minute = minuteOffset(for: pt.y, in: frame), let createNewItemHandler else { return }
 
 			let start = day.date.midnight.addingTimeInterval(minute * 60)
-			createNewItemHandler(start.day, start.time)
+			createNewItemHandler.contents(start.day, start.time)
 		}
 		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
 			guard let point, var minute = minutesFromMidnight(for: point.y) else {
@@ -111,9 +113,9 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 
 			if let info = dropped as? DraggedEventInfo, let day = info.day as? DayInfo, let event = info.eventInfo as? DayInfo.EventInfo {
 				if day != self.day { day.remove(event: event) }
-				return dropHandler(event, nil, DateInterval(start: targetDate, duration: info.eventInfo.duration))
+				return dropHandler?.contents(event, nil, DateInterval(start: targetDate, duration: info.eventInfo.duration)) ?? false
 			} else if let item = dropped as? DroppableScheduleItem {
-				return dropHandler(nil, item, newInterval)
+				return dropHandler?.contents(nil, item, newInterval) ?? false
 			}
 			return false
 		}

@@ -14,12 +14,12 @@ extension ScheduleDayView {
 	var events: [DayInfo.EventInfo] {
 		var events = day.events.filter { !$0.isAllDay }.filter { $0.id != proposedDropItem?.id }
 		if proposedDropDay == day, let event = proposedDropItem { events.append(event) }
-		return events
+		return events.sorted { $0.start < $1.start }
 	}
 	
 	var eventGroups: [EventGroup] {
 		var groups: [EventGroup] = []
-		let events = events.sorted { $0.start < $1.start }
+		let events = events
 		var remaining = events
 		
 		for event in remaining {
