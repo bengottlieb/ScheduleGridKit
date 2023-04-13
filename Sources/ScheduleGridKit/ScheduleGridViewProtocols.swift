@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Suite
 
 public protocol ScheduleGridDayInfo: Identifiable, ObservableObject, Equatable {
 	associatedtype EventInfo: ScheduleGridEventInfo

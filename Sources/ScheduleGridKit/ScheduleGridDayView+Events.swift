@@ -73,7 +73,7 @@ extension ScheduleDayView {
 			if let view = (event as? ContextMenuProvidingScheduleGridEvent)?.contextMenu(from: day) {
 				view
 			} else {
-				Button("Edit") { }
+				Button("Edit") { selectedEvent = event }
 				if event is DeletableScheduleGridEvent {
 					Button("Delete", role: .destructive) { delete(event: event) }
 				}
