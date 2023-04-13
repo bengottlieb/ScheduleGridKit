@@ -25,20 +25,21 @@ extension ScheduleDayView {
 		var remaining = events
 		
 		for event in remaining {
-			if !remaining.contains(event) || event == proposedDropItem { continue }
+			if !remaining.contains(event) { continue }
 					
 			var group = [event]
 			remaining.remove(event)
 			
 			for next in remaining {
-				if group.contains(next) { continue }
-				if group.overlaps(with: next) {
+				if group.map({ $0.sourceID }).contains(next.sourceID) { continue }
+
+				if group.overlaps(with: next, tolerance: .minute * 5) {
 					group.append(next)
 					remaining.remove(next)
 				}
 			}
 			
-			groups.append(group)
+			if group.isNotEmpty { groups.append(group) }
 		}
 		
 		return groups.flatMap { array in array.indices.map { idx in PositionedEvent(event: array[idx], position: idx, count: array.count) }}

@@ -7,7 +7,7 @@
 
 import Suite
 
-struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: ScheduleView, Equatable {
+struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: ScheduleView {
 	typealias EventViewBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleEventViewBuilder
 	typealias DayHeaderBuilder = ScheduleGridView<DayInfo, EventView, DayHeaderView>.ScheduleDayHeaderBuilder
 
@@ -20,10 +20,6 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	let headerBuilder: DayHeaderBuilder
 	var shrinkOverlappingEvents = true
 	
-	static func ==(lhs: Self, rhs: Self) -> Bool {
-		lhs.conflicts == rhs.conflicts && lhs.day == rhs.day
-	}
-
 	@Environment(\.minuteHeight) var minuteHeight
 	@Environment(\.startHour) var startHour
 	@Environment(\.endHour) var endHour
@@ -49,7 +45,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	
 	var body: some View {
 		GeometryReader { geo in
-			ZStack(alignment: .top) {
+			ZStack(alignment: .topLeading) {
 				Color.clear
 				if shrinkOverlappingEvents {
 					ForEach(positionedEvents) { event in

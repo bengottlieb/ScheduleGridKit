@@ -11,7 +11,7 @@ import Suite
 public typealias DropHandler = ((any ScheduleGridEventInfo)?, DroppableScheduleItem?, DateInterval) -> Bool
 public typealias CreateNewItemHandler = (Date.Day, Date.Time?) -> Void
 
-public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: View, Equatable {
+public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderView: View>: View {
 	var minuteHeight: CGFloat = 1
 	var startHour = 7
 	var endHour = 18
@@ -29,10 +29,6 @@ public struct ScheduleGridView<DayInfo: ScheduleGridDayInfo, EventView: View, Da
 	@State private var proposedDropItem: DayInfo.EventInfo?
 	@State private var proposedDropDay: DayInfo?
 	@State private var conflicts: [DayInfo.EventInfo] = []
-	
-	public static func ==(lhs: Self, rhs: Self) -> Bool {
-		lhs.days.map { $0.date } == rhs.days.map { $0.date }
-	}
 
 	public init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int = 7, endHour: Int = 18, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping ScheduleDayHeaderBuilder, eventBuilder: @escaping ScheduleEventViewBuilder) {
 		self.minuteHeight = minuteHeight

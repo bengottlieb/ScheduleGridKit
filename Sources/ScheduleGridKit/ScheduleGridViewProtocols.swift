@@ -38,6 +38,7 @@ extension Array where Element: ScheduleGridDayInfo {
 
 public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var id: String { get }
+	var sourceID: String { get }
 	var start: Date.Time { get }
 	var duration: TimeInterval { get }
 	var backgroundColor: Color { get }
@@ -51,15 +52,17 @@ extension ScheduleGridEventInfo {
 	var end: Date.Time { range.end }
 	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
 	
-	func overlaps(with other: Self) -> Bool {
-		self.range.intersection(with: other.range) != nil
+	func overlaps(with other: Self, tolerance: TimeInterval = 0) -> Bool {
+		guard let overlap = range.intersection(with: other.range) else { return false }
+		
+		return overlap.duration > tolerance
 	}
 }
 
 extension Array where Element: ScheduleGridEventInfo {
-	func overlaps(with item: Element) -> Bool {
+	func overlaps(with item: Element, tolerance: TimeInterval = 0) -> Bool {
 		for element in self {
-			if element.overlaps(with: item) { return true }
+			if element.overlaps(with: item, tolerance: tolerance) { return true }
 		}
 		return false
 	}
