@@ -53,14 +53,10 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 				Color.clear
 				if shrinkOverlappingEvents {
 					ForEach(positionedEvents) { event in
-						if event.count <= 1 {
-							viewForEvent(event: event.event)
-						} else {
-							let width = geo.width / Double(event.count)
-							viewForEvent(event: event.event)
-								.frame(width: width)
-								.offset(x: width * Double(event.position), y: 0)
-						}
+						let width = geo.width / Double(event.count)
+						viewForEvent(event: event.event)
+							.frame(width: width)
+							.offset(x: width * Double(event.position), y: 0)
 					}
 				} else {
 					ForEach(events) { event in
