@@ -11,16 +11,20 @@ struct MinuteHeightEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 1.0
 }
 
+struct HourCycleEnvironmentKey: EnvironmentKey {
+	static var defaultValue = Locale.HourCycle.oneToTwelve
+}
+
 struct StartHourEnvironmentKey: EnvironmentKey {
-	static var defaultValue = 7
+	static var defaultValue = 6
+}
+
+struct EndHourEnvironmentKey: EnvironmentKey {
+	static var defaultValue = 24
 }
 
 struct DaySpacingEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 5.0
-}
-
-struct EndHourEnvironmentKey: EnvironmentKey {
-	static var defaultValue = 18
 }
 
 struct HourLabelHeightEnvironmentKey: EnvironmentKey {
@@ -52,6 +56,11 @@ struct CreateNewItemHandlerEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+	var hourCycle: Locale.HourCycle {
+		get { self[HourCycleEnvironmentKey.self] }
+		set { self[HourCycleEnvironmentKey.self] = newValue }
+	}
+	
 	var dropHandler: IDBox<DropHandler, String>? {
 		get { self[DropHandlerEnvironmentKey.self] }
 		set { self[DropHandlerEnvironmentKey.self] = newValue }

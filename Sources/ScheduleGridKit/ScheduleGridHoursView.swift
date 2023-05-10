@@ -46,10 +46,19 @@ public struct ScheduleHoursView: ScheduleView {
 	}
 	
 	struct HourLabel: View {
+		@Environment(\.hourCycle) var hourCycle
 		let hour: Int
 		
+		var displayHour: Int {
+			if hourCycle == .zeroToTwentyThree { return hour }
+			if hourCycle == .oneToTwentyFour { return hour + 1 }
+			let displayed = hour % 12
+			if displayed == 0 { return hourCycle == .oneToTwelve ? 12 : 0 }
+			return hourCycle == .oneToTwelve ? displayed : displayed - 1
+		}
+
 		var body: some View {
-			Text("\(hour)")
+			Text("\(displayHour)")
 				.font(.system(size: 10))
 		}
 	}
