@@ -68,12 +68,12 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 				.padding(paddingDueToHourLabel)
 		}
 		.reportGeometry(frame: $frame)
-		.positionedLongPressGesture { pt in
-			guard let frame, let minute = minuteOffset(for: pt.y, in: frame), let createNewItemHandler else { return }
-
-			let start = day.date.midnight.addingTimeInterval(minute * 60)
-			createNewItemHandler.contents(start.day, start.time)
-		}
+//		.positionedLongPressGesture { pt in
+//			guard let frame, let minute = minuteOffset(for: pt.y, in: frame), let createNewItemHandler else { return }
+//
+//			let start = day.date.midnight.addingTimeInterval(minute * 60)
+//			createNewItemHandler.contents(start.day, start.time)
+//		}
 		.makeDropTarget(types: [DraggedEventInfo.dragType], hover: { type, dropped, point in
 			guard let point, var minute = minutesFromMidnight(for: point.y) else {
 				clearDrag()
