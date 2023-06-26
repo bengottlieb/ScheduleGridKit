@@ -8,13 +8,13 @@
 import SwiftUI
 
 extension ScheduleDayView {
-	struct DragHandle<DayInfo: ScheduleGridDayInfo>: View {
+	struct DragHandle<DayInfoRecord: ScheduleGridDayInfo>: View {
 		let top: Bool
-		let day: DayInfo
-		let event: DayInfo.EventInfo
+		let day: DayInfoRecord
+		let event: DayInfoRecord.EventInfo
 		let minuteHeight: Double
 		
-		@State private var initialEvent: DayInfo.EventInfo?
+		@State private var initialEvent: DayInfoRecord.EventInfo?
 		private var initialEnd: TimeInterval { initialEvent?.end.timeInterval ?? 0 }
 
 		var body: some View {
