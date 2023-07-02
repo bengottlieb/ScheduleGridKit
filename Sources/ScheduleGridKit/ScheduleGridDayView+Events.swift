@@ -12,7 +12,7 @@ extension ScheduleDayView {
 	func dragInfo(for event: DayInfo.EventInfo) -> DraggedEventInfo { .init(day: day, eventInfo: event) }
 
 	var events: [DayInfo.EventInfo] {
-		var events = day.events.filter { !$0.isAllDay }.filter { $0.id != proposedDropItem?.id }
+		var events = day.events.filter { !$0.isAllDay }.filter { $0.matches(filter: scheduleSearchTextFilter) }.filter { $0.id != proposedDropItem?.id }
 		if proposedDropDay == day, let event = proposedDropItem, !events.contains(event) {
 			events.append(event)
 		}

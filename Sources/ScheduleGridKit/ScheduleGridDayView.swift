@@ -28,6 +28,7 @@ struct ScheduleDayView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeaderV
 	@Environment(\.newEventDuration) var newEventDuration
 	@Environment(\.dropHandler) var dropHandler
 	@Environment(\.createNewItemHandler) var createNewItemHandler
+	@Environment(\.scheduleSearchTextFilter) var scheduleSearchTextFilter
 	@State var frame: CGRect?
 	@State private var longPressLocation: CGPoint?
 	@State private var longPressTimer: Timer?

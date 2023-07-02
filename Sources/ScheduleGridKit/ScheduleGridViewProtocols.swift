@@ -47,6 +47,8 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	var title: String { get }
 	var isAllDay: Bool { get }
 	var canAdjustTime: Bool { get }
+	
+	func matches(filter: String) -> Bool
 }
 
 extension ScheduleGridEventInfo {

@@ -11,6 +11,10 @@ struct MinuteHeightEnvironmentKey: EnvironmentKey {
 	static var defaultValue = 1.0
 }
 
+struct ScheduleSearchTextFilterEnvironmentKey: EnvironmentKey {
+	static var defaultValue = ""
+}
+
 struct HourCycleEnvironmentKey: EnvironmentKey {
 	static var defaultValue = Locale.HourCycle.oneToTwelve
 }
@@ -56,6 +60,10 @@ struct CreateNewItemHandlerEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+	public var scheduleSearchTextFilter: String {
+		get { self[ScheduleSearchTextFilterEnvironmentKey.self] }
+		set { self[ScheduleSearchTextFilterEnvironmentKey.self] = newValue }
+	}
 	var hourCycle: Locale.HourCycle {
 		get { self[HourCycleEnvironmentKey.self] }
 		set { self[HourCycleEnvironmentKey.self] = newValue }
