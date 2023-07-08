@@ -78,7 +78,7 @@ public extension ScheduleGridView where EventView == ScheduleEventBubble<DayInfo
 }
 
 public extension ScheduleGridView where EventView == ScheduleEventBubble<DayInfo> {
-	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int? = nil, endHour: Int? = nil, hourCycle: HourMode, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping (DayInfo) -> DayHeaderView) {
+	init(days: [DayInfo], minuteHeight: CGFloat = 1, startHour: Int? = nil, endHour: Int? = nil, hourCycle: HourMode = .oneToTwelve, isScrollable: Bool = true, isScrolling: Binding<Bool> = .constant(false), selectedEvent: Binding<DayInfo.EventInfo?>, headerBuilder: @escaping (DayInfo) -> DayHeaderView) {
 		self.init(days: days, minuteHeight: minuteHeight, startHour: startHour, endHour: endHour, hourCycle: hourCycle, isScrollable: isScrollable, isScrolling: isScrolling, selectedEvent: selectedEvent, headerBuilder: headerBuilder, eventBuilder: { day, event, conflicted in
 			ScheduleEventBubble(eventInfo: event, day: day, isConflicted: conflicted)
 		})
