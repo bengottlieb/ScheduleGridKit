@@ -7,7 +7,7 @@ let package = Package(
 	 name: "ScheduleGridKit",
 	  platforms: [
 				  .macOS(.v13),
-				  .iOS(.v16),
+				  .iOS(.v15),
 				  .watchOS(.v8)
 			],
 	 products: [

@@ -16,7 +16,7 @@ struct ScheduleSearchTextFilterEnvironmentKey: EnvironmentKey {
 }
 
 struct HourCycleEnvironmentKey: EnvironmentKey {
-	static var defaultValue = Locale.HourCycle.oneToTwelve
+	static var defaultValue = HourMode.oneToTwelve
 }
 
 struct StartHourEnvironmentKey: EnvironmentKey {
@@ -64,7 +64,7 @@ extension EnvironmentValues {
 		get { self[ScheduleSearchTextFilterEnvironmentKey.self] }
 		set { self[ScheduleSearchTextFilterEnvironmentKey.self] = newValue }
 	}
-	var hourCycle: Locale.HourCycle {
+	var hourCycle: HourMode {
 		get { self[HourCycleEnvironmentKey.self] }
 		set { self[HourCycleEnvironmentKey.self] = newValue }
 	}
