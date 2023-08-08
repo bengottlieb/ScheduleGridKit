@@ -58,13 +58,13 @@ struct ScheduleWeekView<DayInfo: ScheduleGridDayInfo, EventView: View, DayHeader
 						.padding(.trailing, scheduleDaySpacing)
 					}
 				}
-				.positionedLongPressGesture { pt in
-					guard let createNewItemHandler, days.isNotEmpty else { return }
-					let index = Int(pt.x / (geo.width / Double(days.count)))
-					if index < days.count {
-						createNewItemHandler.contents(days[index].date.day, nil)
-					}
-				}
+//				.positionedLongPressGesture { pt in
+//					guard let createNewItemHandler, days.isNotEmpty else { return }
+//					let index = Int(pt.x / (geo.width / Double(days.count)))
+//					if index < days.count {
+//						createNewItemHandler.contents(days[index].date.day, nil)
+//					}
+//				}
 				.multilineTextAlignment(.center)
 				.padding(.leading, hoursWidth)
 
