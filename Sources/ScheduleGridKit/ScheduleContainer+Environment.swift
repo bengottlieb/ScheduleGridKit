@@ -36,7 +36,7 @@ struct HourLabelHeightEnvironmentKey: EnvironmentKey {
 }
 
 struct RoundToNearestMinuteEnvironmentKey: EnvironmentKey {
-	static var defaultValue = 15.0
+	static var defaultValue = 5.0
 }
 
 struct NewEventDurationEnvironmentKey: EnvironmentKey {
