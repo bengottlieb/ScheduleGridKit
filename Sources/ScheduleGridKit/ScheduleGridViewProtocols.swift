@@ -51,7 +51,7 @@ public protocol ScheduleGridEventInfo: Identifiable, Hashable, Equatable {
 	func matches(filter: String) -> Bool
 }
 
-extension ScheduleGridEventInfo {
+public extension ScheduleGridEventInfo {
 	var end: Date.Time { range.end }
 	var range: Date.TimeRange { Date.TimeRange(start: start, duration: duration) }
 	
